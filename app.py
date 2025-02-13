@@ -4,7 +4,7 @@ from main import recommend_songs
 app = Flask(__name__)
 
 @app.route('/api/v1/prediction', methods=['POST'])
-def get_items():
+def get_data():
     song_name = request.json.get('song_name')
     if not song_name:
         return jsonify({"errors":"Kindly select a song, Thank you,"})
