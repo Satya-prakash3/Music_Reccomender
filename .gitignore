@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+.ipynb_checkpoints
+
 # Distribution / packaging
 .Python
 build/
@@ -129,6 +131,10 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+#My Codes
+Data Scrape/
+Music_Reccomender.ipynb
 
 # Spyder project settings
 .spyderproject
