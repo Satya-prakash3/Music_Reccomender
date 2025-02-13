@@ -3,7 +3,7 @@ from main import recommend_songs
 
 app = Flask(__name__)
 
-@app.route('/prediction', methods=['POST'])
+@app.route('/api/v1/prediction', methods=['POST'])
 def get_items():
     song_name = request.json.get('song_name')
     if not song_name:
