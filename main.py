@@ -24,7 +24,7 @@ def recommend_songs(song_name, n_recommendations=5):
     df['name'] = df['name'].str.lower()
 
     if song_name not in df['name'].values:
-        return "Song not found in the dataset."
+        return {"errors":"There is no song with this name."}
     
     song_idx = df[df['name'] == song_name].index[0]
     song_vector = song_features[song_idx].reshape(1, -1)
@@ -32,4 +32,4 @@ def recommend_songs(song_name, n_recommendations=5):
     
     recommended_indices = similarities.argsort()[-(n_recommendations+1):-1][::-1]
     recommended_songs = df.iloc[recommended_indices][['name']]
-    return recommended_songs.to_dict()
+    return recommended_songs.to_dict(orient="records")

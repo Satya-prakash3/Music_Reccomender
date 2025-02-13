@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Recommendation</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #121212;
+            color: #fff;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+        input, button {
+            padding: 12px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        input {
+            width: calc(100% - 30px);
+            background: #333;
+            color: #fff;
+        }
+        button {
+            background: #ff4757;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #e84118;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #333;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .alert {
+            display: none;
+            padding: 15px;
+            background: #ff4757;
+            color: white;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Music Recommendation Engine</h1>
+        <p>Enter a song name and the number of recommendations you want:</p>
+        <input type="text" id="songName" placeholder="Enter song name">
+        <input type="number" id="numRecommendations" placeholder="Number of recommendations" min="1">
+        <button onclick="getRecommendations()">Get Recommendations</button>
+        
+        <h2>Recommended Songs:</h2>
+        <ul id="recommendations"></ul>
+        <div id="alert" class="alert"></div>
+    </div>
+    
+    <script>
+        async function getRecommendations() {
+            const songName = document.getElementById("songName").value;
+            const numRecommendations = document.getElementById("numRecommendations").value;
+            const alertBox = document.getElementById("alert");
+            alertBox.style.display = "none";
+            
+            try {
+                const response = await fetch("http://10.244.0.4:8080/api/v1/prediction", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        song_name: songName,
+                        n: parseInt(numRecommendations, 10)
+                    })
+                });
+                
+                const data = await response.json();
+                if (response.status == 200) {
+                    const recommendationsList = document.getElementById("recommendations");
+                    recommendationsList.innerHTML = "";
+                    
+                    data.forEach(song => {
+                        const listItem = document.createElement("li");
+                        listItem.textContent = `${song.name}`;
+                        recommendationsList.appendChild(listItem);
+                    });
+                } else {
+                    throw new Error(data.errors || "An error occurred while fetching recommendations.");
+                }
+            } catch (error) {
+                alertBox.textContent = error.message;
+                alertBox.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>
